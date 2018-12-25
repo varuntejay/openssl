@@ -1,0 +1,8 @@
+NodeOUs:
+  Enable: true
+  ClientOUIdentifier:
+    Certificate: %%cacerts
+    OrganizationalUnitIdentifier: client
+  PeerOUIdentifier:
+    Certificate: %%cacerts
+    OrganizationalUnitIdentifier: peer
