@@ -26,4 +26,10 @@ openssl ca -config openssl.cnf -days 3600 -extensions v3_intermediate_ca -notext
 
 ./generate.sh ca.cert.pem ca.key.pem openssl_template.cnf config_template.yaml
 
+openssl x509 -req -days 365 -in ca.cert.pem -signkey ca.key.pem -sha256 -out server.crt
+
+openssl ecparam -genkey -name prime256v1 -noout -out key.pem 
+openssl pkcs8 -topk8 -nocrypt -in key.pem -out ca.key.pem
+openssl req -new -sha256 -config openssl.cnf -extensions v3_ca  -key ca.key.pem -out csr.csr -subj "/C=US/ST=California/L=San Francisco/CN=broadridge.com"
+openssl req -x509 -sha256 -days 365 -key key.pem -in csr.csr -out certificate.pem 
 
