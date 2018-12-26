@@ -1,6 +1,8 @@
 # ROOT CA
 
-openssl ecparam -name prime256v1 -genkey -noout -outform PEM -out ca.key.pem
+openssl ecparam -name prime256v1 -genkey -noout -outform PEM -out temp.ca.key.pem
+
+openssl pkcs8 -topk8 -nocrypt -in ca.key.pem -out ec2.pem
 
 openssl req -config openssl.cnf -key ca.key.pem -new -x509 -days 7500 -sha256 -extensions v3_ca -out ca.cert.pem -subj "/C=US/ST=California/L=San Francisco/CN=broadridge.com"
 

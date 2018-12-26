@@ -74,7 +74,7 @@ function generateCert () {
 
 	# echo "$rootCaCert"
 	# echo "$rootCaKey"
-	# echo "openssl x509 -days 365 -CAcreateserial -CAserial ca.seq -in $csrFile -CA $rootCaCert -CAkey $rootCaKey -out $certFile"
+    # echo "openssl x509 -days 365 -CAcreateserial -CAserial ca.seq -in $csrFile -CA $rootCaCert -CAkey $rootCaKey -out $certFile"
 	openssl x509 -days 365 -CAcreateserial -CAserial ca.seq -in $csrFile -CA $rootCaCert -CAkey $rootCaKey -out $certFile > /dev/null
 	if 	[[ $? -ne 0 ]] ; then
 		echo "Certificate creation failed : $certFile"
@@ -117,12 +117,12 @@ function createCerts () {
 
 	if [[ $extension == "v3_intermediate_ca" ]] ; then
 		mv $keyFile $dir/$(getSKI $certFile)"_sk"
-	elif [[ $extension == "v3_intermediate_ca" ]] ; then 
+	elif [[ $extension == "usr_cert" ]] ; then 
 		mv $keyFile $dir/$(getAKI $certFile)"_sk"
 	fi
 	
 	# Remove temporary files
-	rm $csrFile
+	# rm $csrFile
 }
 
 function generateOrdererCerts () {
@@ -192,9 +192,9 @@ function generateOrdererCerts () {
 	typeset adminTlscaCert=$usersTlsDir/Admin@$CN-cert.pem
 	typeset adminTlscaKey=$usersTlsDir/Admin@$CN-key.pem
 
-	createCerts "Admin@$CN" $tlscaCert $tlscaKey $adminTlscaCsr $adminTlscaCert $adminTlscaKey $usersTlsDir "false" "NULL" "NULL" "v3_intermediate_ca"
+	createCerts "Admin@$CN" $tlscaCert $tlscaKey $adminTlscaCsr $adminTlscaCert $adminTlscaKey $usersTlsDir "false" "NULL" "NULL" "usr_cert"
 	adminTlscaKey=$usersTlsDir/$(getAKI $adminTlscaCert)"_sk"
-
+	
 	mv $adminTlscaCert $usersTlsDir/server.crt
 	mv $adminTlscaKey $usersTlsDir/server.key
 	cp $tlscaCert $usersTlsDir/ca.crt
@@ -204,7 +204,7 @@ function generateOrdererCerts () {
 	typeset adminCaCert=$usersMspAdminDir/Admin@$CN-cert.pem
 	typeset adminCaKey=$usersMspAdminDir/Admin@$CN-key.pem
 
-	createCerts "Admin@$CN" $caCert $caKey $adminCaCsr $adminCaCert $adminCaKey $usersMspAdminDir "false" "NULL" "NULL" "v3_intermediate_ca"
+	createCerts "Admin@$CN" $caCert $caKey $adminCaCsr $adminCaCert $adminCaKey $usersMspAdminDir "false" "NULL" "NULL" "usr_cert"
 	adminCaKey=$usersMspAdminDir/$(getAKI $adminCaCert)"_sk"
 	
 	cp $tlscaCert $usersMspTlscaDir
@@ -242,7 +242,7 @@ function generateOrdererCerts () {
 	typeset ordererTlscaCert=$ordererMspTlscaDir/orderer.$CN-cert.pem
 	typeset ordererTlscaKey=$ordererMspTlscaDir/orderer.$CN-key.pem
 
-	createCerts "orderer.$CN" $tlscaCert $tlscaKey $ordererTlscaCsr $ordererTlscaCert $ordererTlscaKey $ordererMspTlscaDir "false" "NULL" "NULL" "v3_intermediate_ca"
+	createCerts "orderer.$CN" $tlscaCert $tlscaKey $ordererTlscaCsr $ordererTlscaCert $ordererTlscaKey $ordererMspTlscaDir "false" "NULL" "NULL" "usr_cert"
 	ordererTlscaKey=$ordererMspTlscaDir/$(getAKI $ordererTlscaCert)"_sk"
 
 	mv $ordererTlscaCert $ordererTlsDir/server.crt
@@ -254,7 +254,7 @@ function generateOrdererCerts () {
 	typeset ordererCaCert=$ordererMspCaDir/orderer.$CN-cert.pem
 	typeset ordererCaKey=$ordererMspCaDir/orderer.$CN-key.pem
 
-	createCerts "orderer.$CN" $caCert $caKey $ordererCaCsr $ordererCaCert $ordererCaKey $ordererMspCaDir "false" "NULL" "NULL" "v3_intermediate_ca"
+	createCerts "orderer.$CN" $caCert $caKey $ordererCaCsr $ordererCaCert $ordererCaKey $ordererMspCaDir "false" "NULL" "NULL" "usr_cert"
 	ordererCaKey=$ordererMspCaDir/$(getAKI $ordererCaCert)"_sk"
 
 	cp $tlscaCert $ordererMspTlscaDir
@@ -335,7 +335,7 @@ function generatePeerCerts () {
 	typeset adminTlscaCert=$usersTlsDir/Admin@$CN-cert.pem
 	typeset adminTlscaKey=$usersTlsDir/Admin@$CN-key.pem
 
-	createCerts "Admin@$CN" $tlscaCert $tlscaKey $adminTlscaCsr $adminTlscaCert $adminTlscaKey $usersTlsDir "false" "NULL" "NULL" "v3_intermediate_ca"
+	createCerts "Admin@$CN" $tlscaCert $tlscaKey $adminTlscaCsr $adminTlscaCert $adminTlscaKey $usersTlsDir "false" "NULL" "NULL" "usr_cert"
 	adminTlscaKey=$usersTlsDir/$(getAKI $adminTlscaCert)"_sk"
 	
 	mv $adminTlscaCert $usersTlsDir/client.crt
@@ -347,7 +347,7 @@ function generatePeerCerts () {
 	typeset adminCaCert=$usersMspAdminDir/Admin@$CN-cert.pem
 	typeset adminCaKey=$usersMspAdminDir/Admin@$CN-key.pem
 
-	createCerts "Admin@$CN" $caCert $caKey $adminCaCsr $adminCaCert $adminCaKey $usersMspAdminDir "false" "NULL" "client" "v3_intermediate_ca"
+	createCerts "Admin@$CN" $caCert $caKey $adminCaCsr $adminCaCert $adminCaKey $usersMspAdminDir "false" "NULL" "client" "usr_cert"
 	adminCaKey=$usersMspAdminDir/$(getAKI $adminCaCert)"_sk"
 	
 	cp $tlscaCert $usersMspTlscaDir
@@ -387,7 +387,7 @@ function generatePeerCerts () {
 		typeset userTlscaCert=$usersTlsDir/User$userNO@$CN-cert.pem
 		typeset userTlscaKey=$usersTlsDir/User$userNO@$CN-key.pem
 
-		createCerts "User$userNO@$CN" $tlscaCert $tlscaKey $userTlscaCsr $userTlscaCert $userTlscaKey $usersTlsDir "false" "NULL" "NULL" "v3_intermediate_ca"
+		createCerts "User$userNO@$CN" $tlscaCert $tlscaKey $userTlscaCsr $userTlscaCert $userTlscaKey $usersTlsDir "false" "NULL" "NULL" "usr_cert"
 		userTlscaKey=$usersTlsDir/$(getAKI $userTlscaCert)"_sk"
 		
 		mv $userTlscaCert $usersTlsDir/client.crt
@@ -399,7 +399,7 @@ function generatePeerCerts () {
 		typeset userCaCert=$usersMspAdminDir/User$userNO@$CN-cert.pem
 		typeset userCaKey=$usersMspAdminDir/User$userNO@$CN-key.pem
 
-		createCerts "User$userNO@$CN" $caCert $caKey $userCaCsr $userCaCert $userCaKey $usersMspAdminDir "false" "NULL" "client" "v3_intermediate_ca"
+		createCerts "User$userNO@$CN" $caCert $caKey $userCaCsr $userCaCert $userCaKey $usersMspAdminDir "false" "NULL" "client" "usr_cert"
 		userCaKey=$usersMspAdminDir/$(getAKI $userCaCert)"_sk"
 		
 		cp $tlscaCert $usersMspTlscaDir
@@ -428,7 +428,7 @@ function generatePeerCerts () {
 		typeset peerTlscaCert=$peerMspTlscaDir/peer$peerNO.$CN-cert.pem
 		typeset peerTlscaKey=$peerMspTlscaDir/peer$peerNO.$CN-key.pem
 
-		createCerts "peer$peerNO.$CN" $tlscaCert $tlscaKey $peerTlscaCsr $peerTlscaCert $peerTlscaKey $peerMspTlscaDir "false" "NULL" "NULL" "v3_intermediate_ca"
+		createCerts "peer$peerNO.$CN" $tlscaCert $tlscaKey $peerTlscaCsr $peerTlscaCert $peerTlscaKey $peerMspTlscaDir "false" "NULL" "NULL" "usr_cert"
 		peerTlscaKey=$peerMspTlscaDir/$(getAKI $peerTlscaCert)"_sk"
 
 		mv $peerTlscaCert $peerTlsDir/server.crt
@@ -440,7 +440,7 @@ function generatePeerCerts () {
 		typeset peerCaCert=$peerMspCaDir/peer$peerNO.$CN-cert.pem
 		typeset peerCaKey=$peerMspCaDir/peer$peerNO.$CN-key.pem
 
-		createCerts "peer$peerNO.$CN" $caCert $caKey $peerCaCsr $peerCaCert $peerCaKey $peerMspCaDir "false" "NULL" "peer" "v3_intermediate_ca"
+		createCerts "peer$peerNO.$CN" $caCert $caKey $peerCaCsr $peerCaCert $peerCaKey $peerMspCaDir "false" "NULL" "peer" "usr_cert"
 		peerCaKey=$peerMspCaDir/$(getAKI $peerCaCert)"_sk"
 
 		cp $tlscaCert $peerMspTlscaDir

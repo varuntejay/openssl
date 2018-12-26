@@ -16,8 +16,8 @@ serial            = $dir/serial
 RANDFILE          = $dir/private/.rand
 
 # The root key and root certificate.
-private_key       = %%root_key
-certificate       = %%root_cert
+private_key       = /home/teddy/openssl/crypto-config/peerOrganizations/org2.example.com/ca/ca.org2.example.com-cert.pem
+certificate       = /home/teddy/openssl/crypto-config/peerOrganizations/org2.example.com/ca/64777e5602749d864a3e5b2643cf79461cf6c64e_sk
 
 # For certificate revocation lists.
 crlnumber         = $dir/crlnumber
@@ -97,13 +97,13 @@ authorityKeyIdentifier = keyid:always,issuer
 # Extensions for a typical intermediate CA (`man x509v3_config`).
 subjectKeyIdentifier = hash
 keyUsage = critical, digitalSignature, cRLSign, keyCertSign
-basicConstraints = critical, CA:%%caFlag, pathlen:0
+basicConstraints = critical, CA:false, pathlen:0
 authorityKeyIdentifier = keyid:always,issuer
 extendedKeyUsage = anyExtendedKeyUsage
 
 [ usr_cert ]
 # Extensions for client certificates (`man x509v3_config`).
-basicConstraints = critical, CA:%%caFlag
+basicConstraints = critical, CA:false
 # nsCertType = client, email
 # nsComment = "OpenSSL Generated Client Certificate"
 subjectKeyIdentifier = hash
